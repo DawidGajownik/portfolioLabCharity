@@ -82,10 +82,14 @@ public class DonationController {
         donation.setPickedUp(false);
         donationRepository.save(donation);
 
-        String emailSubject = messageSource.getMessage("email.donation.thankyou.subject", null, locale);
-        String emailBody = generateHtmlSummary(donation, locale, request);
+        if (session.getAttribute("loggedUserId") != null) {
+            String emailSubject = messageSource.getMessage("email.donation.thankyou.subject", null, locale);
+            String emailBody = generateHtmlSummary(donation, locale, request);
 
-        emailService.sendMessage(donation.getUser().getEmail(), emailSubject, emailBody);
+            emailService.sendMessage(donation.getUser().getEmail(), emailSubject, emailBody);
+        }
+
+
         return "form-confirmation";
     }
     public String generateHtmlSummary(Donation donation, Locale locale, HttpServletRequest request) {

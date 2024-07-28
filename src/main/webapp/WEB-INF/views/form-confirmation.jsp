@@ -19,6 +19,9 @@
     <div class="slogan container container--90">
         <h2>
             <fmt:message key="message.thankYou" />
+            <c:if test="${loggedUserId!=null}">
+                <fmt:message key="message.thankYou.logged"/>
+            </c:if>
         </h2>
     </div>
 </header>
