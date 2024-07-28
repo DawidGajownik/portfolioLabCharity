@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <!DOCTYPE html>
 <html lang="pl">
@@ -7,7 +8,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Lista użytkowników</title>
+    <title><fmt:message key="title.userList" /></title>
     <link rel="stylesheet" href="<c:url value="/resources/css/style.css"/>"/>
     <style>
         table {
@@ -38,15 +39,15 @@
 <header>
     <%@ include file="elements/adminnav.jsp" %>
 </header>
-<h2>Lista użytkowników</h2>
+<h2><fmt:message key="title.userList" /></h2>
 
 <table>
     <thead>
     <tr>
         <th>ID</th>
-        <th>Login</th>
-        <th>Email</th>
-        <th>Akcje</th>
+        <th><fmt:message key="table.header.login" /></th>
+        <th><fmt:message key="table.header.email" /></th>
+        <th><fmt:message key="table.header.actions" /></th>
     </tr>
     </thead>
     <tbody>
@@ -58,17 +59,17 @@
             <td>
                 <form action="changePassword" method="post" style="display: inline;">
                     <input type="hidden" name="userId" value="${user.id}" />
-                    <button type="submit" class="btn2">Zresetuj hasło</button>
+                    <button type="submit" class="btn2"><fmt:message key="button.resetPassword" /></button>
                 </form>
                 <form action="toggleAdmin" method="post" style="display: inline;">
                     <input type="hidden" name="userId" value="${user.id}" />
                     <button type="submit" class="btn2">
                         <c:choose>
                             <c:when test="${user.level == 0}">
-                                Przyznaj admina
+                                <fmt:message key="button.grantAdmin" />
                             </c:when>
                             <c:otherwise>
-                                Odbierz admina
+                                <fmt:message key="button.revokeAdmin" />
                             </c:otherwise>
                         </c:choose>
                     </button>
@@ -78,20 +79,22 @@
                     <button type="submit" class="btn2">
                         <c:choose>
                             <c:when test="${user.active == true}">
-                                Zablokuj
+                                <fmt:message key="button.blockUser" />
                             </c:when>
                             <c:otherwise>
-                                Odblokuj
+                                <fmt:message key="button.unblockUser" />
                             </c:otherwise>
                         </c:choose>
                     </button>
                 </form>
                 <form action="deleteuser" method="post" style="display: inline;">
                     <input type="hidden" name="userId" value="${user.id}" />
-                    <button type="submit" class="btn2">Usuń konto</button>
+                    <button type="submit" class="btn2"><fmt:message key="button.deleteAccount" /></button>
                 </form>
             </td>
         </tr>
     </c:forEach>
     </tbody>
 </table>
+</body>
+</html>

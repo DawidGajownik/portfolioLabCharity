@@ -3,6 +3,9 @@ package pl.coderslab.charity.donation;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.context.MessageSource;
+import org.springframework.context.MessageSourceResolvable;
+import org.springframework.context.NoSuchMessageException;
 import org.springframework.format.annotation.DateTimeFormat;
 import pl.coderslab.charity.category.Category;
 import pl.coderslab.charity.institution.Institution;
@@ -14,6 +17,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Getter
@@ -60,25 +64,4 @@ public class Donation {
     private LocalTime pickUpTime;
 
     private String pickUpComment;
-
-    public String generateHtmlSummary() {
-        StringBuilder summary = new StringBuilder();
-        summary.append("<html>")
-                .append("<body>")
-                .append("<h2>Podsumowanie</h2>")
-                .append("<table>")
-                .append("<tr><th>Oddałeś/aś</th><td>").append(quantity).append("worków</td></tr>")
-                .append("<tr><th>z kategorii</th><td>").append(categories.stream()
-                        .map(Category::getName)
-                        .collect(Collectors.joining(", "))).append("</td></tr>")
-                .append("<tr><th>dla: </th><td>").append(institution.getName()).append("</td></tr><br><br>")
-
-                .append("<tr><th>Odbiór zaplanowany: </th><td>").append(pickUpDate).append("</td></tr>")
-                .append("<tr><th>O godzinie:</th><td>").append(pickUpTime).append("</td></tr>")
-                .append("<tr><th>Twoje uwagi</th><td>").append(pickUpComment).append("</td></tr>")
-                .append("</table>")
-                .append("</body>")
-                .append("</html>");
-        return summary.toString();
-    }
 }

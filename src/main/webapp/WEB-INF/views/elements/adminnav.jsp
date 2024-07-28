@@ -6,12 +6,12 @@
 <nav class="container container--70">
     <ul class="nav--actions">
         <li class="logged-user">
-            Witaj ${loggedUserLogin}
+            <fmt:message key="nav.welcome" /> ${loggedUserLogin}
             <ul class="dropdown">
-                <li><a href="/myProfile">Profil</a></li>
-                <li><a href="/myDonations">Moje zbiórki</a></li>
-                <li><a href="/">Strona główna</a></li>
-                <li><a href="/logout">Wyloguj</a></li>
+                <li><a href="/myProfile"><fmt:message key="nav.profile" /></a></li>
+                <li><a href="/myDonations"><fmt:message key="nav.myDonations" /></a></li>
+                <li><a href="/"><fmt:message key="nav.home" /></a></li>
+                <li><a href="/logout"><fmt:message key="nav.logout" /></a></li>
             </ul>
         </li>
     </ul>
@@ -21,9 +21,31 @@
         </c:if>
         ${log}
         ${exception}
-        <li><a href="/admin/manage/users" class="btn btn--without-border">Uzytkownicy</a></li>
-        <li><a href="/admin/manage/institutions" class="btn btn--without-border">Instytucje</a></li>
-        <li><a href="/admin/manage/categories" class="btn btn--without-border">Kategorie</a></li>
-        <li><a href="/admin/logs" class="btn btn--without-border">Logi</a></li>
+        <li><a href="/admin/manage/users" class="btn btn--without-border"><fmt:message key="nav.users" /></a></li>
+        <li><a href="/admin/manage/institutions" class="btn btn--without-border"><fmt:message key="nav.institutions" /></a></li>
+        <li><a href="/admin/manage/categories" class="btn btn--without-border"><fmt:message key="nav.categories" /></a></li>
+        <li><a href="/admin/logs" class="btn btn--without-border"><fmt:message key="nav.logs" /></a></li>
+    </ul>
+    <ul class="nav--language">
+        <ul class="nav--language">
+            <form method="get" action="/language" id="languageForm">
+                <input type="hidden" name="redirectUrl" id="redirectUrl"/>
+                <select name="lang" onchange="submitLanguageForm()">
+                    <option value=""><fmt:message key="choose.language" /></option>
+                    <option value="pl">Polski</option>
+                    <option value="en">English</option>
+                    <option value="nl">Nederlands</option>
+                    <option value="de">Deutsch</option>
+                    <option value="cs">Čeština</option>
+
+                </select>
+            </form>
+        </ul>
     </ul>
 </nav>
+<script>
+    function submitLanguageForm() {
+        document.getElementById('redirectUrl').value = document.children[0].ownerDocument.location.pathname;
+        document.getElementById('languageForm').submit();
+    }
+</script>

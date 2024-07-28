@@ -1,19 +1,22 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <!DOCTYPE html>
 <html lang="pl">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title><c:if test="${loggedUserId!=null}">
-            Mój profil
-    </c:if>
+    <title>
+        <c:if test="${loggedUserId!=null}">
+            <fmt:message key="title.myProfile" />
+        </c:if>
         <c:if test="${loggedUserId==null}">
-            Rejestracja
-        </c:if> </title>
+            <fmt:message key="title.register" />
+        </c:if>
+    </title>
     <link rel="stylesheet" href="<c:url value="resources/css/style.css"/>"/>
 </head>
 <body>
@@ -22,70 +25,75 @@
 </header>
 
 <section class="login-page">
-    <h2><c:if test="${loggedUserId!=null}">
-        Edytuj dane
-    </c:if>
+    <h2>
+        <c:if test="${loggedUserId!=null}">
+            <fmt:message key="title.editData" />
+        </c:if>
         <c:if test="${loggedUserId==null}">
-            Załóż konto
-        </c:if></h2>
+            <fmt:message key="title.createAccount" />
+        </c:if>
+    </h2>
     <form:form method="post" modelAttribute="user" action="/register">
         <form:hidden path="id" id="id"/>
         <div class="form-group">
-            <form:input path="login" placeholder="Nazwa użytkownika" />
+            <fmt:message key="placeholder.username" var="placeholderUsername"/>
+            <form:input path="login" placeholder="${placeholderUsername}" />
             <c:if test="${loginError!=null}">
                 <p style="color: red">${loginError}</p>
             </c:if>
         </div>
         <div class="form-group">
-            <form:input path="email" placeholder="Email" />
+            <fmt:message key="placeholder.email" var="placeholderEmail"/>
+            <form:input path="email" placeholder="${placeholderEmail}" />
             <c:if test="${emailError!=null}">
                 <p style="color: red">${emailError}</p>
             </c:if>
         </div>
         <c:if test="${loggedUserId!=null}">
             <div class="form-group">
-                <input type="password" placeholder="Stare hasło" name="oldPassword">
+                <fmt:message key="placeholder.oldPassword" var="placeholderOldPassword"/>
+                <input type="password" placeholder="${placeholderOldPassword}" name="oldPassword">
                 <c:if test="${oldPasswordError!=null}">
                     <p style="color: red">${oldPasswordError}</p>
                 </c:if>
             </div>
             <div class="form-group">
-                <input type="password" placeholder="Nowe hasło" name="newPassword">
+                <fmt:message key="placeholder.newPassword" var="placeholderNewPassword"/>
+                <input type="password" placeholder="${placeholderNewPassword}" name="newPassword">
                 <c:if test="${passwordError!=null}">
                     <p style="color: red">${passwordError}</p>
                 </c:if>
             </div>
-
         </c:if>
         <c:if test="${loggedUserId==null}">
             <div class="form-group">
-                <form:password path="password" placeholder="Hasło" />
+                <fmt:message key="placeholder.password" var="placeholderPassword"/>
+                <form:password path="password" placeholder="${placeholderPassword}" />
                 <c:if test="${passwordError!=null}">
                     <p style="color: red">${passwordError}</p>
                 </c:if>
             </div>
         </c:if>
-
         <div class="form-group">
-            <input type="password" name="confirmPassword" placeholder="Powtórz hasło" />
+            <fmt:message key="placeholder.confirmPassword" var="placeholderConfirmPassword"/>
+            <input type="password" name="confirmPassword" placeholder="${placeholderConfirmPassword}" />
             <c:if test="${passwordsAreDifferent!=null}">
                 <p style="color: red">${passwordsAreDifferent}</p>
             </c:if>
         </div>
-
-
         <div class="form-group form-group--buttons">
             <c:if test="${loggedUserId!=null}">
-                <button class="btn" type="submit">Zmień dane</button>
+                <button class="btn" type="submit"><fmt:message key="button.updateData" /></button>
             </c:if>
             <c:if test="${loggedUserId==null}">
-                <a href="/login" class="btn btn--without-border">Zaloguj się</a>
-                <button class="btn" type="submit">Załóż konto</button>
-                <a href="/remind" class="btn btn--without-border">Nie pamiętam hasła</a>
+                <a href="/login" class="btn btn--without-border"><fmt:message key="button.login" /></a>
+                <button class="btn" type="submit"><fmt:message key="button.createAccount" /></button>
+                <a href="/remind" class="btn btn--without-border"><fmt:message key="button.forgotPassword" /></a>
             </c:if>
-
         </div>
     </form:form>
 </section>
 
 <%@ include file="elements/footer.jsp" %>
+</body>
+</html>

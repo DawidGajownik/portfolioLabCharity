@@ -8,7 +8,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Moje donacje</title>
+    <title><fmt:message key="title.myDonations" /></title>
     <link rel="stylesheet" href="<c:url value="resources/css/style.css"/>"/>
     <style>
         .donations--table {
@@ -52,21 +52,21 @@
 
 <section class="donations" id="donations">
     <div class="container container--85">
-        <h2>Lista darowizn</h2>
+        <h2><fmt:message key="title.donationList" /></h2>
         <table class="donations--table">
             <thead>
             <tr>
                 <th>ID</th>
-                <th>Fundacja</th>
-                <th>Ilość worków</th>
-                <th>Kategorie</th>
-                <th>Adres</th>
-                <th>Telefon</th>
-                <th>Data odbioru</th>
-                <th>Godzina odbioru</th>
-                <th>Czas utworzenia</th>
-                <th>Odbiór</th>
-                <th>Komentarz dla kuriera</th>
+                <th><fmt:message key="table.header.foundation" /></th>
+                <th><fmt:message key="table.header.bagQuantity" /></th>
+                <th><fmt:message key="table.header.categories" /></th>
+                <th><fmt:message key="table.header.address" /></th>
+                <th><fmt:message key="table.header.phone" /></th>
+                <th><fmt:message key="table.header.pickUpDate" /></th>
+                <th><fmt:message key="table.header.pickUpTime" /></th>
+                <th><fmt:message key="table.header.creationDate" /></th>
+                <th><fmt:message key="table.header.pickUpConfirmation" /></th>
+                <th><fmt:message key="table.header.courierComment" /></th>
             </tr>
             </thead>
             <tbody>
@@ -91,7 +91,7 @@
                         <c:if test="${donation.pickedUp==false}">
                             <form action="donation/confirm" method="post" style="display: inline;">
                                 <input type="hidden" name="donationId" value="${donation.id}" />
-                                <button type="submit" class="btn2">Potwierdź odbiór</button>
+                                <button type="submit" class="btn2"><fmt:message key="button.confirmPickUp" /></button>
                             </form>
                         </c:if></td>
                     <td>${donation.pickUpComment}</td>
@@ -103,3 +103,5 @@
 </section>
 
 <%@ include file="elements/footer.jsp" %>
+</body>
+</html>

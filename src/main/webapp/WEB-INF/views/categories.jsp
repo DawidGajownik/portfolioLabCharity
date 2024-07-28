@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <!DOCTYPE html>
 <html lang="pl">
@@ -7,7 +8,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Kategorie</title>
+    <title><fmt:message key="title.categories" /></title>
     <link rel="stylesheet" href="<c:url value="/resources/css/style.css"/>"/>
     <style>
         table {
@@ -38,16 +39,14 @@
 <header>
     <%@ include file="elements/adminnav.jsp" %>
 </header>
-<h2>Kategorie</h2>
-<li><a href="category/add" class="btn2 btn--without-border">Dodaj</a></li><br>
+<h2><fmt:message key="title.categories" /></h2>
+<li><a href="category/add" class="btn2 btn--without-border"><fmt:message key="button.add" /></a></li><br>
 <table>
     <thead>
     <tr>
         <th>ID</th>
-        <th>Nazwa</th>
-        <th>Akcje        ${log}
-            ${exception}</th>
-
+        <th><fmt:message key="table.header.name" /></th>
+        <th><fmt:message key="table.header.actions" /></th>
     </tr>
     </thead>
     <tbody>
@@ -61,21 +60,23 @@
                     <button type="submit" class="btn2">
                         <c:choose>
                             <c:when test="${category.active == true}">
-                                Dezaktywuj
+                                <fmt:message key="button.deactivate" />
                             </c:when>
                             <c:otherwise>
-                                Aktywuj
+                                <fmt:message key="button.activate" />
                             </c:otherwise>
                         </c:choose>
                     </button>
                 </form>
                 <form action="deletecategory" method="post" style="display: inline;">
                     <input type="hidden" name="categoryId" value="${category.id}" />
-                    <button type="submit" class="btn2">Usuń</button>
+                    <button type="submit" class="btn2"><fmt:message key="button.delete" /></button>
                 </form>
-                <a class="btn2" href="/admin/manage/category/edit/${category.id}">Edytuj</a>
+                <a class="btn2" href="/admin/manage/category/edit/${category.id}"><fmt:message key="button.edit" /></a>
             </td>
         </tr>
     </c:forEach>
     </tbody>
 </table>
+</body>
+</html>
