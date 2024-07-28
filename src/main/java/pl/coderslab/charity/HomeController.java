@@ -38,7 +38,13 @@ public class HomeController {
         List <Institution> allInstitutions = new ArrayList<>(institutionRepository
                 .findAll()
                 .stream()
-                .peek(s-> s.setDescription(googleTranslate.translate(s.getDescription(), getLanguage(request))))
+                .peek(s-> {
+                    try {
+                        s.setDescription(googleTranslate.translate(s.getDescription(), getLanguage(request)));
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                })
                 .filter(Institution::isActive)
                 .toList());
         Map<Institution, Institution> allInstitutionsMap = new LinkedHashMap<>();

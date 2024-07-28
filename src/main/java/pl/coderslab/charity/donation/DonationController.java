@@ -60,8 +60,15 @@ public class DonationController {
         model.addAttribute("minTime", LocalTime.of(7, 0));
         model.addAttribute("maxTime", LocalTime.of(19, 59));
         model.addAttribute("now", LocalDate.now().plusDays(1));
-        model.addAttribute("categories", new ArrayList<>(categoryRepository.findAll().stream().peek(s -> s.setName(googleTranslate.translate(s.getName(), lang))).filter(Category::isActive).toList()));
-        model.addAttribute("institutions", new ArrayList<>(institutionRepository.findAll().stream().peek(s->s.setDescription(googleTranslate.translate(s.getDescription(),lang))).filter(Institution::isActive).toList()));
+        model.addAttribute("categories", new ArrayList<>(categoryRepository.findAll()
+                .stream()
+                .peek(s -> s.setName(googleTranslate.translate(s.getName(), lang)))
+                .filter(Category::isActive).toList()));
+        model.addAttribute("institutions", new ArrayList<>(institutionRepository.findAll()
+                .stream()
+                .peek(s->s.setDescription(googleTranslate.translate(s.getDescription(),lang)))
+                .peek(s->s.setName(googleTranslate.translate(s.getName(),lang)))
+                .filter(Institution::isActive).toList()));
         model.addAttribute("donation", new Donation());
         return "form";
     }
@@ -95,7 +102,7 @@ public class DonationController {
                         .map(s->googleTranslate.translate(s,HomeController.getLanguage(request)))
                         .collect(Collectors.joining(", "))).append("</td></tr>")
                 .append("<tr><th>").append(messageSource.getMessage("summary.for", null, locale)).append("</th><td>")
-                .append(donation.getInstitution().getName()).append("</td></tr><br><br>")
+                .append(googleTranslate.translate(donation.getInstitution().getName(), HomeController.getLanguage(request))).append("</td></tr><br><br>")
                 .append("<tr><th>").append(messageSource.getMessage("summary.pickUpDate", null, locale)).append("</th><td>")
                 .append(donation.getPickUpDate()).append("</td></tr>")
                 .append("<tr><th>").append(messageSource.getMessage("summary.pickUpTime", null, locale)).append("</th><td>")

@@ -194,7 +194,11 @@ public class AdminController {
             return "redirect:/";
         }
         session.setAttribute("admin", userRepository.getById(loggedUserId).getLevel());
-        model.addAttribute("institutions", institutionRepository.findAll().stream().peek(s-> s.setDescription(googleTranslate.translate(s.getDescription(), HomeController.getLanguage(request)))).toList());
+        model.addAttribute("institutions", institutionRepository.findAll()
+                .stream()
+                .peek(s-> s.setDescription(googleTranslate.translate(s.getDescription(), HomeController.getLanguage(request))))
+                .peek(s-> s.setName(googleTranslate.translate(s.getName(), HomeController.getLanguage(request))))
+                .toList());
         return "institutions";
     }
 
