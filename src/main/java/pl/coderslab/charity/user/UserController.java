@@ -10,6 +10,7 @@ import pl.coderslab.charity.HomeController;
 import pl.coderslab.charity.category.Category;
 import pl.coderslab.charity.donation.Donation;
 import pl.coderslab.charity.donation.DonationRepository;
+import pl.coderslab.charity.donation.DonationService;
 import pl.coderslab.charity.email.EmailServiceImpl;
 import pl.coderslab.charity.institution.Institution;
 import pl.coderslab.charity.utils.BCrypt;
@@ -33,6 +34,7 @@ public class UserController {
     private final EmailServiceImpl emailService;
     private final MessageSource messageSource;
     private final GoogleTranslate googleTranslate;
+    private final DonationService donationService;
 
     @GetMapping("/register")
     public String register(Model model) {
@@ -295,18 +297,26 @@ public class UserController {
             return "redirect:/login";
         }
         Long id = Long.valueOf(session.getAttribute("loggedUserId").toString());
-        model.addAttribute("donations", donationRepository.findAllByUserId(id)
-                .stream()
-                .peek(s -> s.setCategories(s.getCategories().stream().peek(r->r.setName(googleTranslate.translate(r.getName(), HomeController.getLanguage(request)))).toList()))
-                .peek(s -> {
-                    Institution institution = s.getInstitution();
-                    institution.setName(googleTranslate.translate(institution.getName(), HomeController.getLanguage(request)));
-                    s.setInstitution(institution);
-                })
-                .sorted(Comparator.comparing(Donation::getCreationDateTime))
+
+        model.addAttribute("donations", donationService.findAllByUserId(id, request).stream()
+                                .sorted(Comparator.comparing(Donation::getCreationDateTime))
                 .sorted(Comparator.comparing(Donation::getPickUpDate))
                 .sorted(Comparator.comparing(Donation::isPickedUp).reversed())
                 .toList());
+
+//        model.addAttribute("donations", donationRepository.findAllByUserId(id)
+//                .stream()
+//                .peek(s -> s.setCategories(s.getCategories().stream().peek(r->r.setName(googleTranslate.translate(r.getName(), HomeController.getLanguage(request)))).toList()))
+//                .peek(s -> {
+//                    Institution institution = s.getInstitution();
+//                    institution.setName(googleTranslate.translate(institution.getName(), HomeController.getLanguage(request)));
+//                    s.setInstitution(institution);
+//                })
+//                .sorted(Comparator.comparing(Donation::getCreationDateTime))
+//                .sorted(Comparator.comparing(Donation::getPickUpDate))
+//                .sorted(Comparator.comparing(Donation::isPickedUp).reversed())
+//                .toList());
         return "my-donations";
     }
+
 }

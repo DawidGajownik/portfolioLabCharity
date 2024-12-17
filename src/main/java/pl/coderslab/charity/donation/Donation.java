@@ -61,6 +61,7 @@ public class Donation {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime creationDateTime;
 
+    @DateTimeFormat(pattern = "HH:mm")
     private LocalTime pickUpTime;
 
     private String pickUpComment;

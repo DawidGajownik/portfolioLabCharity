@@ -43,7 +43,6 @@
                     <option value="nl">Nederlands</option>
                     <option value="de">Deutsch</option>
                     <option value="cs">Čeština</option>
-
                 </select>
             </form>
         </ul>

@@ -8,9 +8,11 @@ import org.springframework.web.bind.annotation.*;
 import pl.coderslab.charity.HomeController;
 import pl.coderslab.charity.category.Category;
 import pl.coderslab.charity.category.CategoryRepository;
+import pl.coderslab.charity.category.CategoryService;
 import pl.coderslab.charity.email.EmailServiceImpl;
 import pl.coderslab.charity.institution.Institution;
 import pl.coderslab.charity.institution.InstitutionRepository;
+import pl.coderslab.charity.institution.InstitutionService;
 import pl.coderslab.charity.user.UserRepository;
 import pl.coderslab.charity.utils.GoogleTranslate;
 
@@ -30,12 +32,12 @@ import java.util.stream.Collectors;
 public class DonationController {
 
     private final DonationRepository donationRepository;
-    private final CategoryRepository categoryRepository;
-    private final InstitutionRepository institutionRepository;
     private final UserRepository userRepository;
     private final EmailServiceImpl emailService;
     private final MessageSource messageSource;
-    private final GoogleTranslate googleTranslate;
+    private final DonationService donationService;
+    private final InstitutionService institutionService;
+    private final CategoryService categoryService;
 
     @PostMapping("/confirm")
     public String confirmPickUp(@RequestParam Long donationId, HttpSession session) {
@@ -53,22 +55,12 @@ public class DonationController {
     @GetMapping
     public String form(Model model, HttpServletRequest request) {
         String lang = HomeController.getLanguage(request);
-
-        model.addAttribute("currentLocale", lang);
-
         model.addAttribute("currentLocale", lang);
         model.addAttribute("minTime", LocalTime.of(7, 0));
         model.addAttribute("maxTime", LocalTime.of(19, 59));
         model.addAttribute("now", LocalDate.now().plusDays(1));
-        model.addAttribute("categories", new ArrayList<>(categoryRepository.findAll()
-                .stream()
-                .peek(s -> s.setName(googleTranslate.translate(s.getName(), lang)))
-                .filter(Category::isActive).toList()));
-        model.addAttribute("institutions", new ArrayList<>(institutionRepository.findAll()
-                .stream()
-                .peek(s->s.setDescription(googleTranslate.translate(s.getDescription(),lang)))
-                .peek(s->s.setName(googleTranslate.translate(s.getName(),lang)))
-                .filter(Institution::isActive).toList()));
+        model.addAttribute("categories", categoryService.findAll(request));
+        model.addAttribute("institutions", institutionService.findAll(request));
         model.addAttribute("donation", new Donation());
         return "form";
     }
@@ -84,38 +76,9 @@ public class DonationController {
 
         if (session.getAttribute("loggedUserId") != null) {
             String emailSubject = messageSource.getMessage("email.donation.thankyou.subject", null, locale);
-            String emailBody = generateHtmlSummary(donation, locale, request);
-
+            String emailBody = donationService.generateHtmlSummary(donation, locale, request);
             emailService.sendMessage(donation.getUser().getEmail(), emailSubject, emailBody);
         }
-
-
         return "form-confirmation";
-    }
-    public String generateHtmlSummary(Donation donation, Locale locale, HttpServletRequest request) {
-        StringBuilder summary = new StringBuilder();
-        summary.append("<html>")
-                .append("<body>")
-                .append("<h2>").append(messageSource.getMessage("summary.title", null, locale)).append("</h2>")
-                .append("<table>")
-                .append("<tr><th>").append(messageSource.getMessage("summary.giveAway", null, locale)).append("</th><td>")
-                .append(donation.getQuantity()).append(" ").append(messageSource.getMessage("summary.bags", null, locale)).append("</td></tr>")
-                .append("<tr><th>").append(messageSource.getMessage("summary.categories", null, locale)).append("</th><td>")
-                .append(donation.getCategories().stream()
-                        .map(Category::getName)
-                        .map(s->googleTranslate.translate(s,HomeController.getLanguage(request)))
-                        .collect(Collectors.joining(", "))).append("</td></tr>")
-                .append("<tr><th>").append(messageSource.getMessage("summary.for", null, locale)).append("</th><td>")
-                .append(googleTranslate.translate(donation.getInstitution().getName(), HomeController.getLanguage(request))).append("</td></tr><br><br>")
-                .append("<tr><th>").append(messageSource.getMessage("summary.pickUpDate", null, locale)).append("</th><td>")
-                .append(donation.getPickUpDate()).append("</td></tr>")
-                .append("<tr><th>").append(messageSource.getMessage("summary.pickUpTime", null, locale)).append("</th><td>")
-                .append(donation.getPickUpTime()).append("</td></tr>")
-                .append("<tr><th>").append(messageSource.getMessage("summary.comments", null, locale)).append("</th><td>")
-                .append(donation.getPickUpComment()).append("</td></tr>")
-                .append("</table>")
-                .append("</body>")
-                .append("</html>");
-        return summary.toString();
     }
 }

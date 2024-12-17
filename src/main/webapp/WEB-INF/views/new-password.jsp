@@ -41,7 +41,7 @@
             </c:if>
         </div>
         <div class="form-group form-group--buttons">
-            <button class="btn" type="submit"><fmt:message key="button.changePassword" /></button>
+            <button class="btn" type="submit"><fmt:message key="button.changePassword"/></button>
         </div>
     </form:form>
 </section>

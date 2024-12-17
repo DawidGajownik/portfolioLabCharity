@@ -12,8 +12,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import pl.coderslab.charity.HomeController;
 import pl.coderslab.charity.category.Category;
 import pl.coderslab.charity.category.CategoryRepository;
+import pl.coderslab.charity.category.CategoryService;
 import pl.coderslab.charity.institution.Institution;
 import pl.coderslab.charity.institution.InstitutionRepository;
+import pl.coderslab.charity.institution.InstitutionService;
 import pl.coderslab.charity.log.Log;
 import pl.coderslab.charity.log.LogRepository;
 import pl.coderslab.charity.utils.BCrypt;
@@ -37,6 +39,8 @@ public class AdminController {
     private final LogRepository logRepository;
     private final CategoryRepository categoryRepository;
     private final InstitutionRepository institutionRepository;
+    private final InstitutionService institutionService;
+    private final CategoryService categoryService;
     private final MessageSource messageSource;
     private final GoogleTranslate googleTranslate;
 
@@ -180,7 +184,7 @@ public class AdminController {
             return "redirect:/";
         }
         session.setAttribute("admin", userRepository.getById(loggedUserId).getLevel());
-        model.addAttribute("categories", categoryRepository.findAll().stream().peek(s-> s.setName(googleTranslate.translate(s.getName(), HomeController.getLanguage(request)))).toList());
+        model.addAttribute("categories", categoryService.findAllForAdmin(request));
         return "categories";
     }
 
@@ -194,11 +198,7 @@ public class AdminController {
             return "redirect:/";
         }
         session.setAttribute("admin", userRepository.getById(loggedUserId).getLevel());
-        model.addAttribute("institutions", institutionRepository.findAll()
-                .stream()
-                .peek(s-> s.setDescription(googleTranslate.translate(s.getDescription(), HomeController.getLanguage(request))))
-                .peek(s-> s.setName(googleTranslate.translate(s.getName(), HomeController.getLanguage(request))))
-                .toList());
+        model.addAttribute("institutions", institutionService.findAllForAdmin(request));
         return "institutions";
     }
 

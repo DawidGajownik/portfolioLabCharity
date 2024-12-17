@@ -12,6 +12,7 @@ import pl.coderslab.charity.donation.DonationRepository;
 import pl.coderslab.charity.email.EmailServiceImpl;
 import pl.coderslab.charity.institution.Institution;
 import pl.coderslab.charity.institution.InstitutionRepository;
+import pl.coderslab.charity.institution.InstitutionService;
 import pl.coderslab.charity.utils.GoogleTranslate;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,6 +27,7 @@ public class HomeController {
     private final DonationRepository donationRepository;
     private final EmailServiceImpl emailService;
     private final GoogleTranslate googleTranslate;
+    private final InstitutionService institutionService;
 
     @GetMapping("/language")
     public String changeLanguage(@RequestParam String lang, @RequestParam String redirectUrl, HttpServletRequest request) {
@@ -35,13 +37,9 @@ public class HomeController {
 
     @RequestMapping("/")
     public String homeAction(Model model, HttpServletRequest request){
-        List <Institution> allInstitutions = new ArrayList<>(institutionRepository
-                .findAll()
-                .stream()
-                .peek(s-> s.setDescription(googleTranslate.translate(s.getDescription(), getLanguage(request))))
-                .peek(s-> s.setName(googleTranslate.translate(s.getName(), getLanguage(request))))
-                .filter(Institution::isActive)
-                .toList());
+
+        List<Institution> allInstitutions = new ArrayList<>(institutionService.findAll(request));
+
         Map<Institution, Institution> allInstitutionsMap = new LinkedHashMap<>();
         while (!allInstitutions.isEmpty()) {
             if (allInstitutions.size()>1){
